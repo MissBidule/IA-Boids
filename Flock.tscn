@@ -1,12 +1,17 @@
 [gd_scene load_steps=3 format=3 uid="uid://cxu7xrvstcogo"]
 
 [ext_resource type="Script" uid="uid://bw1hc1dvv8jch" path="res://Flock.gd" id="1_2yk3g"]
-
-[sub_resource type="BoxShape3D" id="BoxShape3D_cj8a0"]
-size = Vector3(5, 5, 5)
+[ext_resource type="PackedScene" uid="uid://bp1tt0kl83x7h" path="res://enemy.tscn" id="2_cj8a0"]
 
 [node name="Area3D" type="Area3D"]
 script = ExtResource("1_2yk3g")
-
-[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
-shape = SubResource("BoxShape3D_cj8a0")
+maxPos = Vector3(18.502, -1.956, 14.714)
+minPos = Vector3(-18.4, -1.956, -14.456)
+distanceToFollow = 3.0
+cohesionDistance = 1.0
+numberOfBoids = 20
+zombie = ExtResource("2_cj8a0")
+separationDistance = 1.0
+speedLimit = 0.2
+alignmentCoeff = 2.0
+BoundaryWallValue = 2.0

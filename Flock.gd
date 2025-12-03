@@ -1,7 +1,7 @@
 extends Area3D
 
-var maxPos
-var minPos
+@export var maxPos : Vector3
+@export var minPos : Vector3
 @export var distanceToFollow : float = 5
 @export var cohesionDistance : float = 7
 @export var numberOfBoids : int = 10
@@ -12,119 +12,114 @@ var minPos
 @export var separationCoeff : float = 1.0
 @export var alignmentCoeff : float = 5.0
 @export var boundaryCoeff : float = 6.0
+@export var BoundaryWallValue : float = 10
+@export var isPaused : bool = false
 
-var myBoids
+@export var obstacles: Array[StaticBody3D] = []
+
+var myBoids: Array[CharacterBody3D] = []
 
 func _ready() -> void:
-	
-	for i in range (i, numberOfBoids) :
+	for i in numberOfBoids :
 		var RandCoord = Vector3(randf_range(minPos.x, maxPos.x),
-								randf_range(minPos.y, maxPos.y),
-								randf_range(minPos.z, maxPos.z));
+								minPos.y,
+								randf_range(minPos.z, maxPos.z))
+		var randDirection = Vector3(randf_range(-speedLimit, speedLimit), 0, randf_range(-speedLimit, speedLimit))
 		var boid = zombie.instantiate()
 		add_child(boid)
 		myBoids.append(boid)
-		boid.localPosition = RandCoord
+		boid.position = RandCoord
+		boid.direction = randDirection
 
 func limitVelocity (boid : CharacterBody3D) -> void:
-	if (boid.velocity.norm() > speedLimit) :
-		boid.velocity = boid.velocity/(boid.velocity).norm()*speedLimit;
+	if (boid.direction.length() > speedLimit) :
+		boid.direction = boid.direction/(boid.direction).length()*speedLimit;
 
 func separation(boid : CharacterBody3D) -> Vector3:
-	var avoidVector = Vecto3.ZERO
+	var avoidVector = Vector3.ZERO
 
 	for currentBoid in myBoids :
-		if currentBoid != boid && Vector3.distance(currentBoid.pos, boid.position) < separationDistance :
-			avoidVector -= (currentBoid.getPos() - boid.getPos());
+		if currentBoid != boid && currentBoid.position.distance_to(boid.position) < separationDistance :
+			avoidVector -= (currentBoid.position - boid.position);
+	
+	for obstacle in obstacles :
+		if obstacle.position.distance_to(boid.position) < separationDistance :
+			avoidVector -= 2 * (obstacle.position - boid.position);
 
 	return avoidVector;
 
 
-glm::vec3 Flock :: cohesion(Boid& boid){
+func cohesion(boid : CharacterBody3D) -> Vector3:
+	var centerOfMass = Vector3.ZERO;
+	var cohesionNeighbor = 0
+	for currentBoid in myBoids :
+		if(currentBoid != boid && currentBoid.position.distance_to(boid.position) < cohesionDistance) :
+			centerOfMass += currentBoid.position
+			cohesionNeighbor += 1
+	if (cohesionNeighbor == 0) : return centerOfMass
+	return (centerOfMass/(cohesionNeighbor))/100.0
 
-	glm::vec3 centerOfMass = glm::vec3(0,0,0);
+func alignment(boid : CharacterBody3D) -> Vector3:
+	var directionAverage = Vector3.ZERO
+	var alignmentNeighbor = 0
+	for currentBoid in myBoids :
+		if (currentBoid != boid && currentBoid.position.distance_to(boid.position) < distanceToFollow) :
+			directionAverage+=currentBoid.direction;
+			alignmentNeighbor += 1
+	if (alignmentNeighbor == 0) : return directionAverage
+	return (directionAverage/(alignmentNeighbor))/8.0
+
+func boundaries(boid : CharacterBody3D) -> Vector3:
+	var v = Vector3.ZERO
+	var hit_wall = false
 	
-		for(Boid& currentBoid : myBoids){
-
-			if(&currentBoid != &boid && glm::distance(currentBoid.getPos(),boid.getPos())<cohesionDistance){
-
-				centerOfMass+=currentBoid.getPos();
-			}
-
-	}
-
-	return (centerOfMass/static_cast<float>(myBoids.size()))/100.0f;
-}
-
-glm::vec3 Flock :: alignment(Boid& boid){
-
-	glm::vec3 velocityAverage = glm::vec3(0,0,0);
+	if (boid.position.x < minPos.x) :
+		v.x = lerp(v.x, BoundaryWallValue, (minPos.x - boid.position.x))
+		hit_wall = true
+		boid.wall_escape_dir.x = randf_range(0, 1)
+		if (boid.wall_escape_dir.z == 0) : boid.wall_escape_dir.z = randf_range(-1, 1)
+	elif (boid.position.x > maxPos.x) :
+		v.x = lerp(v.x, -BoundaryWallValue, (boid.position.x - maxPos.x))
+		hit_wall = true
+		boid.wall_escape_dir.x = randf_range(-1, 0)
+		if (boid.wall_escape_dir.z == 0) : boid.wall_escape_dir.z = randf_range(-1, 1)
 	
-		for(Boid& currentBoid : myBoids){
+	if (boid.position.z < minPos.z) :
+		v.z = lerp(v.z, BoundaryWallValue, (minPos.z - boid.position.z))
+		hit_wall = true
+		if (boid.wall_escape_dir.x == 0) : boid.wall_escape_dir.x = randf_range(-1, 1)
+		boid.wall_escape_dir.z = randf_range(0, 1)
+	elif (boid.position.z > maxPos.z) :
+		v.z = lerp(v.z, -BoundaryWallValue, (boid.position.z - maxPos.z))
+		hit_wall = true
+		if (boid.wall_escape_dir.x == 0) : boid.wall_escape_dir.x = randf_range(-1, 1)
+		boid.wall_escape_dir.z = randf_range(-1, 0)
+		
+	if hit_wall:
+		boid.wall_escape = true
+		boid.wall_escape_timer = randf_range(0.6, 1.2)   # random duration
+		boid.wall_escape_dir = boid.wall_escape_dir.normalized()
+	
+	return v.normalized()
 
-			if(&currentBoid != &boid && glm::distance(currentBoid.getPos(),boid.getPos())<distanceToFollow){
+func _physics_process(delta: float) -> void:
+	if (!isPaused) :
+		for currentBoid in myBoids :
+			var cohesionValue = cohesionCoeff * cohesion(currentBoid)
+			var separationValue = separationCoeff * separation(currentBoid)
+			var alignmentValue = alignmentCoeff * alignment(currentBoid)
+			var boundariesValue = boundaryCoeff * boundaries(currentBoid)
 
-				velocityAverage+=currentBoid.getVelocity();
-			}
+			if currentBoid.wall_escape:
+				currentBoid.wall_escape_timer -= delta
 
-	}
+				# While escaping, ignore boundaries and flock rules
+				currentBoid.direction = currentBoid.wall_escape_dir * speedLimit
 
-	return (velocityAverage/static_cast<float>(myBoids.size()))/8.0f;
-}
-
-glm::vec3 Flock :: boundaries(Boid& boid) {
-
-	glm::vec3 v;
-	if(boid.getPos().x < minPos.x){
-		v.x = BoundaryWallValue;
-	}else if(boid.getPos().x > maxPos.x){
-		v.x = -BoundaryWallValue;
-	}
-	if(boid.getPos().y < minPos.y){
-		v.y = BoundaryWallValue;
-	}else if(boid.getPos().y > maxPos.y){
-		v.y = -BoundaryWallValue;
-	}
-	if(boid.getPos().z < minPos.z){
-		v.z = BoundaryWallValue;
-	}else if(boid.getPos().z > maxPos.z){
-		v.z = -BoundaryWallValue;
-	}
-	return v;
-}
-
-void Flock :: simulate(){
-
-	if(!isPaused){
-
-		for(Boid& currentBoid : myBoids){
-
-			glm::vec3 cohesionValue = cohesionCoeff*cohesion(currentBoid);
-			glm::vec3 separationValue = separationCoeff*separation(currentBoid);
-			glm::vec3 alignmentValue = alignmentCoeff*alignment(currentBoid);
-			glm::vec3 boundariesValue = boundaryCoeff*boundaries(currentBoid);
-
-			currentBoid.setVelocity(currentBoid.getVelocity()+boundariesValue+separationValue+alignmentValue+cohesionValue);
+				if currentBoid.wall_escape_timer <= 0:
+					currentBoid.wall_escape = false    # return to normal flock mode
+			else:
+				currentBoid.direction += (boundariesValue + separationValue + alignmentValue + cohesionValue)
 			limitVelocity(currentBoid);
-			currentBoid.setPos(currentBoid.getPos()+currentBoid.getVelocity()) ;
-		}
-
-	}
-}
-
-void Flock::displayParam() {
-	ImGui::Begin(("Flock settings "+name).c_str());
-	ImGui::Text("maxSpeed");
-	ImGui::SliderFloat("Max speed", &speedLimit, .001f, 10.f);
-	ImGui::SliderFloat("Distance see for alignment", &distanceToFollow, .01f, 10);
-	ImGui::SliderFloat("Distance see for cohesion", &cohesionDistance, .01f, 10);
-	ImGui::SliderFloat("Distance see for separation", &separationDistance, .01f, 10);
-
-	ImGui::SliderFloat("coefficient for alignment force", &alignmentCoeff, .1f, 10);
-	ImGui::SliderFloat("coefficient for cohesion force", &cohesionCoeff, .1f, 10);
-	ImGui::SliderFloat("coefficient for separation force", &separationCoeff, .1f, 10);
-	ImGui::SliderFloat("coefficient for boundary force", &boundaryCoeff, .1f, 10);
-	ImGui::Checkbox("Pause", &isPaused);
-
-	ImGui::End();
-}
+			if currentBoid.velocity.length() > 0.01:
+				currentBoid.look_at(currentBoid.position - Vector3(currentBoid.velocity.x, 0, currentBoid.velocity.z))

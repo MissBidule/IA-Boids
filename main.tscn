@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3 uid="uid://bpmdd2tef5pe2"]
+[gd_scene load_steps=14 format=3 uid="uid://bpmdd2tef5pe2"]
 
 [ext_resource type="Material" uid="uid://dmhyig35gypos" path="res://floor.tres" id="1_0xm2m"]
 [ext_resource type="Script" uid="uid://bavmjeuk2kekn" path="res://main.gd" id="1_272bh"]
@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://bo0fgx8k0req6" path="res://3Dmodels/barriers/gateBarrier.glb" id="4_lquwl"]
 [ext_resource type="PackedScene" uid="uid://dqd8t5rfmfbr5" path="res://3Dmodels/graves/grave1.glb" id="5_lquwl"]
 [ext_resource type="PackedScene" uid="uid://bp1tt0kl83x7h" path="res://enemy.tscn" id="6_7mycd"]
+[ext_resource type="PackedScene" uid="uid://cxu7xrvstcogo" path="res://Flock.tscn" id="8_5vw27"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_1bvp3"]
 
@@ -19,7 +20,9 @@ size = Vector3(0.1, 1.6, 1)
 [sub_resource type="BoxShape3D" id="BoxShape3D_7mycd"]
 size = Vector3(0.1, 1.5, 2)
 
-[sub_resource type="BoxShape3D" id="BoxShape3D_5vw27"]
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_5vw27"]
+radius = 0.35009766
+height = 1.5927734
 
 [node name="Main" type="Node3D"]
 script = ExtResource("1_272bh")
@@ -367,8 +370,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -2)
 [node name="grave2" parent="Graves/StaticBody3D3" instance=ExtResource("5_lquwl")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D3"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 0)
-shape = SubResource("BoxShape3D_5vw27")
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.29638672, 0)
+shape = SubResource("CapsuleShape3D_5vw27")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="Graves/StaticBody3D3"]
 transform = Transform3D(1, 0, 0, 0, 0.5937841, 0.8046245, 0, -0.8046245, 0.5937841, -0.5, 1, 0.275)
@@ -380,28 +383,36 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, 0.7)
 
 [node name="grave3" parent="Graves/StaticBody3D2" instance=ExtResource("5_lquwl")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D2"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 0)
-shape = SubResource("BoxShape3D_5vw27")
-
 [node name="OmniLight3D" type="OmniLight3D" parent="Graves/StaticBody3D2"]
 transform = Transform3D(1, 0, 0, 0, 0.5937841, 0.8046245, 0, -0.8046245, 0.5937841, -0.5, 1, 0.275)
 light_color = Color(0.42745098, 1, 0.4745098, 1)
 light_energy = 3.189
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.29638672, 0)
+shape = SubResource("CapsuleShape3D_5vw27")
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Graves"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -5)
 
 [node name="grave1" parent="Graves/StaticBody3D" instance=ExtResource("5_lquwl")]
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 0)
-shape = SubResource("BoxShape3D_5vw27")
-
 [node name="OmniLight3D" type="OmniLight3D" parent="Graves/StaticBody3D"]
 transform = Transform3D(1, 0, 0, 0, 0.5937841, 0.8046245, 0, -0.8046245, 0.5937841, -0.5, 1, 0.275)
 light_color = Color(0.42745098, 1, 0.4745098, 1)
 light_energy = 3.189
 
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.29638672, 0)
+shape = SubResource("CapsuleShape3D_5vw27")
+
 [node name="CharacterBody3D" parent="." instance=ExtResource("6_7mycd")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6751046, 0, 1.9982798)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.534855, 0, 4.451414)
+visible = false
+
+[node name="Area3D" parent="." node_paths=PackedStringArray("obstacles") instance=ExtResource("8_5vw27")]
+maxPos = Vector3(8.534855, 0, 4.451414)
+minPos = Vector3(-7.4446187, 0, -10.273231)
+distanceToFollow = 2.0
+separationCoeff = 3.0
+obstacles = [NodePath("../Graves/StaticBody3D3"), NodePath("../Graves/StaticBody3D2"), NodePath("../Graves/StaticBody3D")]
