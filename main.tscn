@@ -1,0 +1,407 @@
+[gd_scene load_steps=13 format=3 uid="uid://bpmdd2tef5pe2"]
+
+[ext_resource type="Material" uid="uid://dmhyig35gypos" path="res://floor.tres" id="1_0xm2m"]
+[ext_resource type="Script" uid="uid://bavmjeuk2kekn" path="res://main.gd" id="1_272bh"]
+[ext_resource type="PackedScene" uid="uid://b0x1romkxwb4o" path="res://player.tscn" id="2_0xm2m"]
+[ext_resource type="PackedScene" uid="uid://5svu1ve1rely" path="res://3Dmodels/barriers/simpleBarrier.glb" id="3_1bvp3"]
+[ext_resource type="PackedScene" uid="uid://bo0fgx8k0req6" path="res://3Dmodels/barriers/gateBarrier.glb" id="4_lquwl"]
+[ext_resource type="PackedScene" uid="uid://dqd8t5rfmfbr5" path="res://3Dmodels/graves/grave1.glb" id="5_lquwl"]
+[ext_resource type="PackedScene" uid="uid://bp1tt0kl83x7h" path="res://enemy.tscn" id="6_7mycd"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_1bvp3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
+size = Vector3(100, 2, 100)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_272bh"]
+size = Vector3(0.1, 1.6, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_7mycd"]
+size = Vector3(0.1, 1.5, 2)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_5vw27"]
+
+[node name="Main" type="Node3D"]
+script = ExtResource("1_272bh")
+
+[node name="floor" type="StaticBody3D" parent="."]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="floor"]
+transform = Transform3D(158.4657, 0, 0, 0, 1.0019388, 0, 0, 0, 166.97894, -0.62471133, 0.00048470497, 0)
+mesh = SubResource("PlaneMesh_1bvp3")
+skeleton = NodePath("../..")
+surface_material_override/0 = ExtResource("1_0xm2m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="floor"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+shape = SubResource("BoxShape3D_0xm2m")
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.54494643, 0.8384709, 0, -0.8384709, 0.54494643, 0, 8.550333, 5.4435787)
+current = true
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 0.5937841, 0.8046245, 0, -0.8046245, 0.5937841, 0, 10.235106, 0)
+light_color = Color(0.9999997, 0.62465245, 0.49931765, 1)
+light_energy = 1.617
+light_indirect_energy = 0.0
+shadow_enabled = true
+
+[node name="Player" parent="." instance=ExtResource("2_0xm2m")]
+
+[node name="Cemetary" type="Node3D" parent="."]
+
+[node name="gate" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 0, 0.0135986805, 5.469252)
+
+[node name="gateBarrier" parent="Cemetary/gate" instance=ExtResource("4_lquwl")]
+transform = Transform3D(1.57, 0, 0, 0, 1.57, 0, 0, 0, 1.57, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/gate"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.45)
+shape = SubResource("BoxShape3D_272bh")
+
+[node name="barrier" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 1.05, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier2" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 3.100822, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier2" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier3" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -2.2045841, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier3" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier4" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -4.253458, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier4" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, 5.4170094)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L2" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, 3.3666677)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L2" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R2" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, 3.4189105)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R2" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 5.148135, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -6.306096, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L3" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, 1.3221908)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L3" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R3" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, 1.3744335)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R3" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L4" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, -0.7281508)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L4" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R4" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, -0.675908)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R4" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R4"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="gate2" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 0, 0.0135986805, -10.972472)
+
+[node name="gateBarrier" parent="Cemetary/gate2" instance=ExtResource("4_lquwl")]
+transform = Transform3D(1.57, 0, 0, 0, 1.57, 0, 0, 0, 1.57, 0, 0, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/gate2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.85, -0.45)
+shape = SubResource("BoxShape3D_272bh")
+
+[node name="barrier7" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 1.05, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier7" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier8" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 3.100822, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier8" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier9" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -2.2045841, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier9" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier9"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier10" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -4.253458, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier10" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier10"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier11" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 5.148135, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier11" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier11"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier12" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -6.306096, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier12" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier12"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L5" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, -2.7739687)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L5" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R5" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, -2.721726)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R5" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R5"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L6" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, -4.8243103)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L6" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R6" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, -4.7720675)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R6" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R6"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L7" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, -6.8687873)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L7" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R7" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, -6.8165445)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R7" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R7"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier5L8" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, -8.352727, 0.0135986805, -8.919128)
+
+[node name="simpleBarrier" parent="Cemetary/barrier5L8" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier5L8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier6R8" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 1, 9.243627, 0.0135986805, -8.866886)
+
+[node name="simpleBarrier" parent="Cemetary/barrier6R8" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier6R8"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier13" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 7.191141, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier13" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier13"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier14" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -8.352727, 0.0135986805, 5.469252)
+
+[node name="simpleBarrier" parent="Cemetary/barrier14" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier14"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier15" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, 7.191141, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier15" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier15"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="barrier16" type="StaticBody3D" parent="Cemetary"]
+transform = Transform3D(-5.2333707e-08, -8.080485e-09, -1, -2.9802322e-08, 0.99999994, -8.080484e-09, 0.99999994, 2.9802322e-08, -5.2333714e-08, -8.352727, 0.0135986805, -10.972472)
+
+[node name="simpleBarrier" parent="Cemetary/barrier16" instance=ExtResource("3_1bvp3")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Cemetary/barrier16"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, -1.03)
+shape = SubResource("BoxShape3D_7mycd")
+
+[node name="Graves" type="Node3D" parent="."]
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="Graves"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0, -2)
+
+[node name="grave2" parent="Graves/StaticBody3D3" instance=ExtResource("5_lquwl")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 0)
+shape = SubResource("BoxShape3D_5vw27")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Graves/StaticBody3D3"]
+transform = Transform3D(1, 0, 0, 0, 0.5937841, 0.8046245, 0, -0.8046245, 0.5937841, -0.5, 1, 0.275)
+light_color = Color(0.42745098, 1, 0.4745098, 1)
+light_energy = 3.189
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="Graves"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.8, 0, 0.7)
+
+[node name="grave3" parent="Graves/StaticBody3D2" instance=ExtResource("5_lquwl")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 0)
+shape = SubResource("BoxShape3D_5vw27")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Graves/StaticBody3D2"]
+transform = Transform3D(1, 0, 0, 0, 0.5937841, 0.8046245, 0, -0.8046245, 0.5937841, -0.5, 1, 0.275)
+light_color = Color(0.42745098, 1, 0.4745098, 1)
+light_energy = 3.189
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Graves"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4, 0, -5)
+
+[node name="grave1" parent="Graves/StaticBody3D" instance=ExtResource("5_lquwl")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Graves/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.5, 0.5, 0)
+shape = SubResource("BoxShape3D_5vw27")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="Graves/StaticBody3D"]
+transform = Transform3D(1, 0, 0, 0, 0.5937841, 0.8046245, 0, -0.8046245, 0.5937841, -0.5, 1, 0.275)
+light_color = Color(0.42745098, 1, 0.4745098, 1)
+light_energy = 3.189
+
+[node name="CharacterBody3D" parent="." instance=ExtResource("6_7mycd")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.6751046, 0, 1.9982798)
