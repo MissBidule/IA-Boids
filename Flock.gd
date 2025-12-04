@@ -16,6 +16,7 @@ extends Area3D
 @export var isPaused : bool = false
 
 @export var obstacles: Array[StaticBody3D] = []
+@export var player: CharacterBody3D
 
 var myBoids: Array[CharacterBody3D] = []
 
@@ -43,8 +44,8 @@ func separation(boid : CharacterBody3D) -> Vector3:
 			avoidVector -= (currentBoid.position - boid.position);
 	
 	for obstacle in obstacles :
-		if obstacle.position.distance_to(boid.position) < separationDistance :
-			avoidVector -= 2 * (obstacle.position - boid.position);
+		if obstacle.position.distance_to(boid.position) < 2 * separationDistance :
+			avoidVector -= (obstacle.position - boid.position);
 
 	return avoidVector;
 
@@ -65,6 +66,9 @@ func alignment(boid : CharacterBody3D) -> Vector3:
 	for currentBoid in myBoids :
 		if (currentBoid != boid && currentBoid.position.distance_to(boid.position) < distanceToFollow) :
 			directionAverage+=currentBoid.direction;
+			alignmentNeighbor += 1
+	if (player.position.distance_to(boid.position) < distanceToFollow) :
+			directionAverage+=(player.position - boid.position).normalized();
 			alignmentNeighbor += 1
 	if (alignmentNeighbor == 0) : return directionAverage
 	return (directionAverage/(alignmentNeighbor))/8.0

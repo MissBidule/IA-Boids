@@ -410,9 +410,9 @@ shape = SubResource("CapsuleShape3D_5vw27")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.534855, 0, 4.451414)
 visible = false
 
-[node name="Area3D" parent="." node_paths=PackedStringArray("obstacles") instance=ExtResource("8_5vw27")]
+[node name="Area3D" parent="." node_paths=PackedStringArray("obstacles", "player") instance=ExtResource("8_5vw27")]
 maxPos = Vector3(8.534855, 0, 4.451414)
 minPos = Vector3(-7.4446187, 0, -10.273231)
 distanceToFollow = 2.0
-separationCoeff = 3.0
 obstacles = [NodePath("../Graves/StaticBody3D3"), NodePath("../Graves/StaticBody3D2"), NodePath("../Graves/StaticBody3D")]
+player = NodePath("../Player")
